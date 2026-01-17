@@ -60,3 +60,15 @@ There are some options in `ZIVAimpute` function:
 - `verbose`: Whether to print training logs (default: `False`)
 
 - `tau`: Threshold for dropout probability `π` used during imputation (default: `0.001`)
+
+## References and contact
+We recommend you cite our paper when using these codes for further investigation:
+```bash
+@article{vo2026scziva,
+  title={scZiva: Imputation method for single-cell RNA-seq data with Zero-Inflated Variational Autoencoder},
+  author={Vo, Tuan L and Le Van, Vinh and Ha Quoc, Toan and Nguyen Anh, Quoc},
+  journal={},
+  year={2026}
+}
+```
+You can just send additional requests directly to the first author Tuan L. Vo (tuanvl@hcmute.edu.vn) or the corresponding author Vinh Le Van (vinhlv@hcmute.edu.vn), for the appropriate permission.
