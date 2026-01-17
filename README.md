@@ -22,6 +22,41 @@ This repository is structured as follows
 # 3. Usages
 
 ## 3.1. Datasets 
-All datasets used in this work can be directly downloaded here: https://zenodo.org/uploads/18263992
+All datasets used in this work can be directly downloaded here: https://zenodo.org/uploads/18263992.
 
 ## 3.2. Example
+- The input is located in `data` folder, and the output is located in `results/imputed_data`.
+- Run the main.py, it will find all datasets and process them.
+
+Here is an example with a specific dataset:
+
+```bash
+from ZIVA import ZIVAimpute
+
+# Loading your dataset
+df = pd.read_csv(data/Yan.csv, index_col=0)
+X = df.values
+
+# scZiva imputation
+X_imp, _ = ZIVAimpute(X)
+```
+
+There are some options in `ZIVAimpute` function:
+
+- `Xmiss`: Input data matrix with missing values (cells × genes)
+
+- `seed`: Random seed for reproducibility (default: `1`)
+
+- `device`: Computing device (`cuda` or `cpu`).  If `None`, the default device is automatically selected (default: `None`)
+
+- `num_epochs`: Number of training epochs for optimizing the ZIVA model (default: `200`)
+
+- `lr`: Learning rate for optimization (default: `1e-3`)
+
+- `hidden_dim`: Dimension of hidden layers in the encoder/decoder network (default: `128`)
+
+- `latent_dim`: Dimension of latent representation (default: `64`)
+
+- `verbose`: Whether to print training logs (default: `False`)
+
+- `tau`: Threshold for dropout probability `π` used during imputation (default: `0.001`)
