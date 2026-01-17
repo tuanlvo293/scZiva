@@ -2,16 +2,9 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 import torch, gc
-
 from ZIVA import ZIVAimpute
 from preprocessing import normalize_and_log_single
 
-
-def print_gpu_mem(tag=""):
-    if torch.cuda.is_available():
-        alloc = torch.cuda.memory_allocated() / 1024**3
-        reserved = torch.cuda.memory_reserved() / 1024**3
-        #print(f"[GPU] {tag} allocated={alloc:.2f}GB | reserved={reserved:.2f}GB")
 
 def run_ziva_imputation(
     input_folder="data",
@@ -30,17 +23,20 @@ def run_ziva_imputation(
 
     print(f"[ZIVA] Found {len(files)} file(s) in {input_folder}")
 
+    device = torch.device("cuda")
+    print(f"[ZIVA] Using device: {device}")
+
     for csv_file in files:
         print(f"\n[ZIVA] Processing: {csv_file.name}")
 
         try:
             # --------------------------------------------------
-            # 1️⃣ Load filtered data (cells × genes)
+            # 1️⃣ Load data (cells × genes)
             # --------------------------------------------------
             df = pd.read_csv(csv_file, index_col=0)
 
-            cell_names = df.index.copy()
-            gene_names = df.columns.copy()
+            cell_names = df.index
+            gene_names = df.columns
 
             X = df.values.astype(np.float32)
             print("[ZIVA] Input shape (cells × genes):", X.shape)
@@ -52,17 +48,7 @@ def run_ziva_imputation(
                 X = np.round(X).clip(min=0)
 
             # --------------------------------------------------
-            # 3️⃣ Decide device (AUTO)
-            # --------------------------------------------------
-            n_elements = X.size
-            use_gpu = torch.cuda.is_available() and n_elements < 8e7
-            device = torch.device("cuda" if use_gpu else "cpu")
-
-            print(f"[ZIVA] Using device: {device}")
-            print_gpu_mem("before ZIVA")
-
-            # --------------------------------------------------
-            # 4️⃣ ZIVA imputation
+            # 3️⃣ ZIVA imputation (GPU)
             # --------------------------------------------------
             zero_ratio = (X == 0).sum() / X.size
             print(f"[ZIVA] Zero ratio before impute: {zero_ratio:.2%}")
@@ -73,19 +59,17 @@ def run_ziva_imputation(
                 device=device
             )
 
-            print_gpu_mem("after ZIVA")
-
             zero_ratio_imp = (X_imp == 0).sum() / X_imp.size
             print(f"[ZIVA] Zero ratio after impute: {zero_ratio_imp:.2%}")
 
             # --------------------------------------------------
-            # 5️⃣ Normalize + log (cells × genes)
+            # 4️⃣ Normalize + log
             # --------------------------------------------------
             X_imp = normalize_and_log_single(X_imp)
             print("[ZIVA] Normalization & log done.")
 
             # --------------------------------------------------
-            # 6️⃣ Save output
+            # 5️⃣ Save output
             # --------------------------------------------------
             out_df = pd.DataFrame(
                 X_imp,
@@ -102,15 +86,10 @@ def run_ziva_imputation(
             print(f"[ERROR] ❌ Failed on {csv_file.name}: {e}")
 
         finally:
-            if 'X' in locals():
-                del X
-            if 'X_imp' in locals():
-                del X_imp
-
+            del X, X_imp
             gc.collect()
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
-                print_gpu_mem("after cleanup")
+            torch.cuda.empty_cache()
+
 
 # --------------------------------------------------
 # Entry point
@@ -121,4 +100,3 @@ if __name__ == "__main__":
         output_folder="results/imputed_data",
         round_input=True
     )
-
