@@ -34,7 +34,7 @@ Here is an example with a specific dataset:
 from ZIVA import ZIVAimpute
 
 # Loading your dataset
-df = pd.read_csv(data/Yan.csv, index_col=0)
+df = pd.read_csv(data/Lung.csv, index_col=0)
 X = df.values
 
 # scZiva imputation
