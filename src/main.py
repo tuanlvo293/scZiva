@@ -8,12 +8,15 @@ from preprocessing import normalize_and_log_single
 
 def run_ziva_imputation(
     input_folder="data",
-    output_folder="results/imputed_data",
+    output_folder="results",
     seed=1,
     round_input=True,
 ):
-    input_folder = Path(input_folder)
-    output_folder = Path(output_folder)
+    BASE_DIR = Path(__file__).resolve().parent.parent  # root scZiva
+
+    input_folder = BASE_DIR / input_folder
+    output_folder = BASE_DIR / output_folder
+
     output_folder.mkdir(parents=True, exist_ok=True)
 
     files = sorted(input_folder.glob("*.csv"))
@@ -97,6 +100,6 @@ def run_ziva_imputation(
 if __name__ == "__main__":
     run_ziva_imputation(
         input_folder="data",
-        output_folder="results/imputed_data",
+        output_folder="results",
         round_input=True
     )
