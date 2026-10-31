@@ -1,5 +1,5 @@
 # scZiva: Imputation method for single-cell RNA-seq data with Zero-Inflated Variational Autoencoder
-This is a code repository associated with the paper: "scZiva: Imputation method for single-cell RNA-seq data with Zero-Inflated Variational Autoencoder". This paper is under review for the journal.
+This is a code repository associated with the paper: "scZiva: Imputation method for single-cell RNA-seq data with Zero-Inflated Variational Autoencoder", published at https://link.springer.com/article/10.1186/s12859-026-06422-2
 # 1. Introduction
 Single-cell RNA sequencing (scRNA-seq) has enabled detailed gene expression analysis but is severely affected by technical dropouts, which introduce noise and hinder downstream analyses. We propose scZiva, a variational autoencoder–based imputation method that models overdispersed counts with a zero-inflated negative binomial distribution and captures local gene dependencies using one-dimensional convolutional layers. Experiments on simulated and real scRNA-seq datasets show that scZiva consistently outperforms existing imputation methods.
 
@@ -65,9 +65,13 @@ We recommend you cite our paper when using these codes for further investigation
 @article{vo2026scziva,
   title={scZiva: imputation method for single-cell RNA-seq data with zero-inflated variational autoencoder},
   author={Vo, Long Tuan and Le, Van Vinh and Ha, Quoc Toan and Nguyen, Anh Quoc},
-  journal={BMC Bioinformatics},
+  journal={BMC bioinformatics},
+  volume={27},
+  number={1},
+  pages={92},
   year={2026},
   publisher={Springer}
+}
 }
 ```
 You can just send additional requests directly to the first author Tuan L. Vo (tuanvl@hcmute.edu.vn) or the corresponding author Vinh Le Van (vinhlv@hcmute.edu.vn), for the appropriate permission.
